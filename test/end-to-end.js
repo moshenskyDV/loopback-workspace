@@ -561,7 +561,7 @@ describe('end-to-end', function() {
   }
 
   describe('autoupdate', function() {
-    this.timeout(10000);
+    this.timeout(15000);
     var connection;
     before(function(done) {
       connection = setupConnection(done);
@@ -636,7 +636,7 @@ describe('end-to-end', function() {
   });
 
   describe('discovery', function() {
-    this.timeout(10000);
+    this.timeout(15000);
 
     var connection;
     before(function(done) {
@@ -783,7 +783,7 @@ describe('end-to-end', function() {
 
     describe('MySQL', function() {
       it('returns true for valid config', function(done) {
-        this.timeout(10000);
+        this.timeout(15000);
         givenDataSource({}, function(err, definition) {
           if (err) return done(err);
           definition.testConnection(done);
