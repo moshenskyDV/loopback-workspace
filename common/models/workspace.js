@@ -467,7 +467,7 @@ module.exports = function(Workspace) {
     Workspace.start = function(cb) {
       if (Workspace._child) {
         debug('child already running as %s', Workspace._child.pid);
-        setImmediate(function() {
+        process.nextTick(function() {
           cb(null, { pid: Workspace._child.pid });
         });
         return;
@@ -588,7 +588,7 @@ module.exports = function(Workspace) {
     Workspace.stop = function(cb) {
       if (!Workspace._child) {
         debug('skipping Workspace.stop - child not running');
-        setImmediate(function() {
+        process.nextTick(function() {
           cb(null, { exitCode: null });
         });
         return;
@@ -632,7 +632,7 @@ module.exports = function(Workspace) {
       { running: true, pid: Workspace._child.pid } :
       { running: false };
 
-      setImmediate(function() {
+      process.nextTick(function() {
         cb(null, result);
       });
     };

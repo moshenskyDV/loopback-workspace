@@ -5,5 +5,5 @@
 
 module.exports = function(app, cb) {
   app.asyncBoot = typeof cb === 'function';
-  setImmediate(cb);
+  process.nextTick(cb);
 };
