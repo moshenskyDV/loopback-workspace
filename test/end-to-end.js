@@ -30,7 +30,7 @@ var MYSQL_USER = 'lbws';
 var MYSQL_PASSWORD = 'hbx42rec';
 
 describe('end-to-end', function() {
-  this.timeout(10000);
+  this.timeout(15000);
 
   describe('empty-server template', function() {
     var app;
