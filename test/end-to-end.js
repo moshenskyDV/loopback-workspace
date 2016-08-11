@@ -1095,7 +1095,7 @@ function execNpm(args, options, cb) {
 }
 
 function installSandboxPackages(cb) {
-  this.timeout(300 * 1000);
+  this.timeout(300 * 1000 * (process.env.CI ? 2 : 1));
   install(SANDBOX, PKG_CACHE, ['dependencies', 'devDependencies'], cb);
 }
 
