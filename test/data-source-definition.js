@@ -241,7 +241,7 @@ function getMockDataSourceDef() {
   var mockDataSource = {
     connector: {
       connect: function(cb) {
-        process.nextTick(cb);
+        setImmediate(cb);
       },
     },
     discoverModelDefinitions: function(options, cb) {

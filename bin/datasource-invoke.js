@@ -24,7 +24,7 @@ process.once('message', function(msg) {
       callbackArgs: args,
     });
 
-    process.nextTick(function() {
+    setImmediate(function() {
       process.exit();
     });
   }

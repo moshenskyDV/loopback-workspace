@@ -80,7 +80,7 @@ describe('Workspace', function() {
       var ncp = Workspace.copyRecursive;
       Workspace.copyRecursive = function(src, dest, cb) {
         calls.push([src, dest]);
-        process.nextTick(cb);
+        setImmediate(cb);
       };
 
       Workspace.addComponent(
