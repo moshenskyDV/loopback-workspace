@@ -852,7 +852,7 @@ describe('end-to-end', function() {
 
     // The tests are forking new processes and setting up HTTP servers,
     // they requires more than 2 seconds to finish
-    this.timeout(10000);
+    this.timeout(15000);
 
     before(resetWorkspace);
     before(givenBasicWorkspace);
