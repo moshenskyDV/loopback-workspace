@@ -33,6 +33,7 @@ describe('end-to-end', function() {
   this.timeout(15000);
 
   describe('empty-server template', function() {
+    this.timeout(5 * 60 * 1000);
     var app;
 
     before(resetWorkspace);
@@ -205,6 +206,7 @@ describe('end-to-end', function() {
   });
 
   describe('empty-server template without explorer', function() {
+    this.timeout(5 * 60 * 1000);
     before(resetWorkspace);
     before(function createWorkspace(done) {
       var options = {
@@ -226,6 +228,7 @@ describe('end-to-end', function() {
   });
 
   describe('api-server template', function() {
+    this.timeout(5 * 60 * 1000);
     var app;
 
     before(resetWorkspace);
