@@ -9,25 +9,25 @@ var util = require('util');
 module.exports = function() {
   var ModelMethod = app.models.ModelMethod;
   var exampleWorkspace = path.resolve(__dirname, '../../../../../example/common/models');
-  var testcase = this;
+  var testsuite = this;
   this.Given(/^The model '(.+)' has a method '(.+)'$/, function(modelName, methodName, next) {
-    testcase.modelName = modelName;
-    testcase.methodName = methodName;
+    testsuite.modelName = modelName;
+    testsuite.methodName = methodName;
     next();
   });
 
   this.When(/^I query for the model method$/, function(next) {
-    var methodId = 'common.' + testcase.modelName + '.' + testcase.methodName;
+    var methodId = 'common.' + testsuite.modelName + '.' + testsuite.methodName;
     ModelMethod.find(exampleWorkspace, methodId, function(err, data) {
       if (err) return next(err);
-      testcase.methodConfig = data;
+      testsuite.methodConfig = data;
       next();
     });
   });
 
   this.Then(/^The model method config is returned$/, function(next) {
     var expect = chai.expect;
-    expect(Object.keys(testcase.methodConfig)).to.eql([
+    expect(Object.keys(testsuite.methodConfig)).to.eql([
       'isStatic',
       'accepts',
       'returns',

@@ -20,6 +20,9 @@
   },
   "ModelMethod": {
     "dataSource": null
+  },
+  "Middleware": {
+    "dataSource": null
   }
 }
 

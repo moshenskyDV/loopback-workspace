@@ -34,13 +34,3 @@ Feature: Users should be able to read a list of artifacts
     Given The model 'TestModel' exists and it has 3 ACL configurations
     When I list the model access controls for the model 'TestModel'
     Then All the acl configurations are returned
-
-  Scenario: get a list of middleware phases
-    Given The workspace has 6 middleware phases configured
-    When I list the middlewares
-    Then All the phases are returned
-
-  Scenario: find a middleware method
-    Given The 'initial' phase has a method './middleware/log-error' in the file '/server/middleware/log-error.js'
-    When I query for the middleware method 'initial./middleware/log-error'
-    Then The middleware config for the method is returned

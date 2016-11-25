@@ -6,9 +6,14 @@ Feature: Users should be able to read middleware configurations
   Background: Workspace is loaded in a given directory
 
   Scenario: get a list of middleware phases
-    Given The workspace has 6 middleware phases configured
+    Given The workspace has 9 middleware phases configured
     When I list the middlewares
     Then All the phases are returned
+
+  Scenario: find a middleware phase
+    Given The workspace middleware has a phase 'initial'
+    When I query for the phase
+    Then All middleware config for the phase is returned
 
   Scenario: find a middleware method
     Given The 'initial' phase has a method './middleware/log-error' in the file '/server/middleware/log-error.js'
