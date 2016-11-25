@@ -4,8 +4,7 @@
 // License text available at https://opensource.org/licenses/MIT
 'use strict';
 
-var path = require('path');
-var fs = require('fs-extra');
+var workspaceManager = require('../../datasource/workspaceManager.js');
 
 module.exports = function(ModelDefinition) {
   /**
@@ -16,13 +15,8 @@ module.exports = function(ModelDefinition) {
    * @inherits Definition
    */
 
-  ModelDefinition.find = function(workspaceDir, id, callback) {
-    var file = path.resolve(workspaceDir, id + '.json');
-    fs.readJson(file, function(err, data) {
-      if (err && err.name === 'SyntaxError') {
-        err.message = g.f('Cannot parse %s: %s', id, err.message);
-      }
-      callback(err, err ? undefined : data);
-    });
+  ModelDefinition.find = function(id, cb) {
+    var workspace = workspaceManager.getWorkspace();
+    workspace.readModel(id, cb); 
   };
 };

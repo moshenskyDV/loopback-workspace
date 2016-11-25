@@ -5,10 +5,12 @@ var expect = require('chai').expect;
 var loopback = require('loopback');
 var path = require('path');
 var util = require('util');
+var workspaceManager = require('../../../../../datasource/workspaceManager.js');
 
 module.exports = function() {
   var ModelProperty = app.models.ModelProperty;
-  var exampleWorkspace = path.resolve(__dirname, '../../../../../example/common/models');
+  var exampleWorkspace = path.resolve(__dirname, '../../../../../example');
+  workspaceManager.createWorkspace(exampleWorkspace);
   var testsuite = this;
   this.Given(/^The model '(.+)' has a property '(.+)'$/, function(modelName, propertyName, next) {
     testsuite.modelName = modelName;
@@ -18,7 +20,7 @@ module.exports = function() {
 
   this.When(/^I query for the model property$/, function(next) {
     var propertyId = 'common.' + testsuite.modelName + '.' + testsuite.propertyName;
-    ModelProperty.find(exampleWorkspace, propertyId, function(err, data) {
+    ModelProperty.find(propertyId, function(err, data) {
       if (err) return next(err);
       testsuite.propertyDef = data;
       next();

@@ -5,6 +5,7 @@
 'use strict';
 var fs = require('fs-extra');
 var path = require('path');
+var workspaceManager = require('../../datasource/workspaceManager.js');
 
 module.exports = function(ModelConfig) {
   /**
@@ -15,15 +16,8 @@ module.exports = function(ModelConfig) {
    * @inherits Definition
    */
 
-  ModelConfig.find = function(workspaceDir, cb) {
-    var modelConfigFilePath = path.join(workspaceDir, 'server/model-config.json');
-    fs.readJson(modelConfigFilePath, function(err, data) {
-      if (err && err.name === 'SyntaxError') {
-        err.message = g.f('Cannot parse %s: %s', id, err.message);
-        cb(err);
-      } else {
-        cb(null, Object.keys(data));
-      }
-    });
+  ModelConfig.find = function(cb) {
+    var workspace = workspaceManager.getWorkspace();
+    workspace.readAllModelConfig(this, cb); 
   };
 };

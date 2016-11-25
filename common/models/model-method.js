@@ -7,6 +7,7 @@
 var semver = require('semver');
 var path = require('path');
 var fs = require('fs-extra');
+var workspaceManager = require('../../datasource/workspaceManager.js');
 
 /**
   * Represents a Method of a LoopBack `Model`.
@@ -35,19 +36,8 @@ module.exports = function(ModelMethod) {
     return data.name;
   };
 
-  ModelMethod.find = function(workspaceDir, id, cb) {
-    var parts = id.split('.');
-    var facet = parts[0];
-    var modelName = parts[1];
-    var methodName = parts[2];
-    var file = path.resolve(workspaceDir, modelName + '.json');
-    fs.readJson(file, function(err, data) {
-      if (err && err.name === 'SyntaxError') {
-        err.message = g.f('Cannot parse %s: %s', id, err.message);
-      }
-      var methods = data.methods;
-      var methodConfig = methods[methodName];
-      cb(err, err ? undefined : methodConfig);
-    });
+  ModelMethod.find = function(id, cb) {
+    var workspace = workspaceManager.getWorkspace();
+    workspace.readModelMethod(id, cb); 
   };
 };

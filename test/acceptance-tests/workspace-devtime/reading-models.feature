@@ -11,12 +11,12 @@ Feature: Users should be able to read a list of artifacts
     Then All the model configs are returned
 
   Scenario: find a model definition
-    Given The model 'Users' exists
-    When I query for the model definition of 'Users'
+    Given The model 'users' exists
+    When I query for the model definition of 'users'
     Then The model definition is returned
 
   Scenario: find a model property
-    Given The model 'Users' has a property 'id'
+    Given The model 'users' has a property 'id'
     When I query for the model property
     Then The model property config is returned
 
@@ -26,9 +26,9 @@ Feature: Users should be able to read a list of artifacts
     Then The model method config is returned
 
   Scenario: find a model relation
-    Given The model 'User' exists and the relation 'roles' exists
-    When I query for the model relation 'common.user.roles'
-    Then The model relation config for 'common.user.roles' is returned
+    Given The model 'users' has a relation 'roles'
+    When I query for the model relation
+    Then The model relation config is returned
 
   Scenario: get a list of access control list (ACL) for a model
     Given The model 'TestModel' exists and it has 3 ACL configurations

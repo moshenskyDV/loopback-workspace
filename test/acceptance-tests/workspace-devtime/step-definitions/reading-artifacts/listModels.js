@@ -5,12 +5,15 @@ var expect = require('chai').expect;
 var loopback = require('loopback');
 var path = require('path');
 var util = require('util');
+var workspaceManager = require('../../../../../datasource/workspaceManager.js');
 
 module.exports = function() {
   var numberOfExpectedModels = 0;
   var numberOfAvailableModels = 0;
   var ModelConfig = app.models.ModelConfig;
   var exampleWorkspace = path.resolve(__dirname, '../../../../../example');
+  workspaceManager.createWorkspace(exampleWorkspace);
+
   var testsuite = this;
 
   this.Given(/^I have a workspace containing (\d+) model\(s\)$/, function(numberOfExpectedModels, next) {

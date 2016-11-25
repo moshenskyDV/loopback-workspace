@@ -5,10 +5,13 @@ var app = require('../../../../../');
 var loopback = require('loopback');
 var chai = require('chai');
 var path = require('path');
+var workspaceManager = require('../../../../../datasource/workspaceManager.js');
+var exampleWorkspace = path.resolve(__dirname, '../../../../../example');
 
 var ModelDefinition = app.models.ModelDefinition;
-var exampleWorkspace = path.resolve(__dirname, '../../../../../example/common/models');
+
 module.exports = function() {
+  workspaceManager.createWorkspace(exampleWorkspace);
   var testsuite = this;
   this.Given(/^The model '(.+)' exists$/, function(modelName, next) {
     testsuite.modelName = modelName;
@@ -16,7 +19,8 @@ module.exports = function() {
   });
 
   this.When(/^I query for the model definition of '(.+)'$/, function(modelName, next) {
-    ModelDefinition.find(exampleWorkspace, modelName, function(err, data) {
+    var id = 'common.' + testsuite.modelName;
+    ModelDefinition.find(id, function(err, data) {
       if (err) return next(err);
       testsuite.modelDef = data;
       next();
@@ -27,12 +31,7 @@ module.exports = function() {
     var expect = chai.expect;
     expect(Object.keys(testsuite.modelDef)).to.eql([
       'name',
-      'idInjection',
-      'properties',
-      'validations',
-      'relations',
-      'acls',
-      'methods',
+      'idInjection'
     ]);
     next();
   });

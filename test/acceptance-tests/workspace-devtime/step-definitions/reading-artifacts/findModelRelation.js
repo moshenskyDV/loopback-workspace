@@ -8,33 +8,33 @@ var util = require('util');
 var workspaceManager = require('../../../../../datasource/workspaceManager.js');
 
 module.exports = function() {
-  var ModelMethod = app.models.ModelMethod;
+  var ModelRelation = app.models.ModelRelation;
   var exampleWorkspace = path.resolve(__dirname, '../../../../../example');
   workspaceManager.createWorkspace(exampleWorkspace);
 
   var testsuite = this;
-  this.Given(/^The model '(.+)' has a method '(.+)'$/, function(modelName, methodName, next) {
+  this.Given(/^The model '(.+)' has a relation '(.+)'$/, function(modelName, relationName, next) {
     testsuite.modelName = modelName;
-    testsuite.methodName = methodName;
+    testsuite.relationName = relationName;
     next();
   });
 
-  this.When(/^I query for the model method$/, function(next) {
-    var methodId = 'common.' + testsuite.modelName + '.' + testsuite.methodName;
-    ModelMethod.find(methodId, function(err, data) {
+  this.When(/^I query for the model relation$/, function(next) {
+    var relationId = 'common.' + testsuite.modelName + '.' + testsuite.relationName;
+    ModelRelation.find(relationId, function(err, data) {
       if (err) return next(err);
-      testsuite.methodConfig = data;
+      testsuite.relationConfig = data;
       next();
     });
   });
 
-  this.Then(/^The model method config is returned$/, function(next) {
+  this.Then(/^The model relation config is returned$/, function(next) {
     var expect = chai.expect;
-    expect(Object.keys(testsuite.methodConfig)).to.eql([
-      'isStatic',
-      'accepts',
-      'returns',
-      'http',
+    expect(Object.keys(testsuite.relationConfig)).to.eql([
+      'type',
+      'model',
+      'foreignKey',
+      'through'
     ]);
     next();
   });

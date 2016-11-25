@@ -1,0 +1,12 @@
+{
+  "ModelDefaultDir": "models",
+  "files": {
+    "Models": [
+       "models/*.json"
+     ],
+     "ModelConfig":[
+       "model-config.json"
+     ]
+   },
+   "ModelConfigFile": "model-config.json"
+}

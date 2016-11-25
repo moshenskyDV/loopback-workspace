@@ -5,6 +5,7 @@
 'use strict';
 var fs = require('fs-extra');
 var path = require('path');
+var workspaceManager = require('../../datasource/workspaceManager.js');
 
 /**
   * Represents a Property of a LoopBack `Model`.
@@ -40,20 +41,8 @@ module.exports = function(ModelProperty) {
     returns: {type: ['string'], root: true},
   });
 
-  ModelProperty.find = function(workspaceDir, id, cb) {
-    var parts = id.split('.');
-    var facet = parts[0];
-    var modelName = parts[1];
-    var propertyName = parts[2];
-    var file = path.resolve(workspaceDir, modelName + '.json');
-    fs.readJson(file, function(err, data) {
-      if (err && err.name === 'SyntaxError') {
-        err.message = g.f('Cannot parse %s: %s', id, err.message);
-        return cb(err);
-      }
-      var properties = data.properties;
-      var propertyConfig = properties[propertyName];
-      cb(null, propertyConfig);
-    });
+  ModelProperty.find = function(id, cb) {
+    var workspace = workspaceManager.getWorkspace();
+    workspace.readModelProperty(id, cb); 
   };
 };

@@ -23,6 +23,9 @@
   },
   "Middleware": {
     "dataSource": null
+  },
+  "ModelRelation": {
+    "dataSource": null
   }
 }
 

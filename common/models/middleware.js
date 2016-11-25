@@ -5,7 +5,7 @@
 
 var fs = require('fs-extra');
 var path = require('path');
-
+var workspaceManager = require('../../datasource/workspaceManager.js');
 /**
   * Defines a `Middleware` configuration.
   * @class Middleware
@@ -25,26 +25,13 @@ module.exports = function(Middleware) {
     return phase + '.' + data.name + index;
   };
 
-  Middleware.all = function(workspaceDir, cb) {
-    var file = path.resolve(workspaceDir, 'server/middleware.json');
-    fs.readJson(file, function(err, data) {
-      if (err && err.name === 'SyntaxError') {
-        err.message = g.f('Cannot parse %s: %s', id, err.message);
-        return cb(err);
-      }
-      cb(null, Object.keys(data));
-    });
+  Middleware.all = function(cb) {
+    var workspace = workspaceManager.getWorkspace();
+    workspace.readAllMiddleware(this, cb); 
   }
 
-  Middleware.find = function(workspaceDir, id, cb) {
-    var file = path.resolve(workspaceDir, 'server/middleware.json');
-    fs.readJson(file, function(err, data) {
-      if (err && err.name === 'SyntaxError') {
-        err.message = g.f('Cannot parse %s: %s', id, err.message);
-        return cb(err);
-      }
-      var phase = data[id];
-      cb(null, phase);
-    });
+  Middleware.find = function(id, cb) {
+    var workspace = workspaceManager.getWorkspace();
+    workspace.readMiddleware(this, id, cb); 
   }
 };
