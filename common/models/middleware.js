@@ -25,13 +25,13 @@ module.exports = function(Middleware) {
     return phase + '.' + data.name + index;
   };
 
-  Middleware.all = function(cb) {
+  Middleware.getAllData = function(cb) {
     var workspace = workspaceManager.getWorkspace();
-    workspace.readAllMiddleware(this, cb); 
+    workspace.readAllMiddleware(cb); 
   }
 
-  Middleware.find = function(id, cb) {
+  Middleware.getData = function(id, cb) {
     var workspace = workspaceManager.getWorkspace();
-    workspace.readMiddleware(this, id, cb); 
+    workspace.readMiddleware(id, cb); 
   }
 };

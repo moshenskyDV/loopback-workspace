@@ -17,6 +17,9 @@ var app = module.exports = loopback();
 // must define base models
 boot(app, __dirname);
 
+// file persistence
+require('../connector/connector.js');
+
 app.emit('ready');
 
 // LoopBack REST interface
@@ -102,3 +105,7 @@ app.start = function() {
 if (require.main === module) {
   app.start();
 }
+
+var workspaceManager = require('../datasource/workspaceManager.js');
+var exampleWorkspace = path.resolve(__dirname, '../example');
+workspaceManager.createWorkspace(exampleWorkspace);

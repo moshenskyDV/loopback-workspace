@@ -21,7 +21,7 @@ module.exports = function() {
 
   this.When(/^I query for the model method$/, function(next) {
     var methodId = 'common.' + testsuite.modelName + '.' + testsuite.methodName;
-    ModelMethod.find(methodId, function(err, data) {
+    ModelMethod.getData(methodId, function(err, data) {
       if (err) return next(err);
       testsuite.methodConfig = data;
       next();

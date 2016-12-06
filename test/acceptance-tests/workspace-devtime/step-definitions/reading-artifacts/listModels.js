@@ -22,7 +22,7 @@ module.exports = function() {
   });
 
   this.When(/^I list models for the workspace$/, function(next) {
-    ModelConfig.find(exampleWorkspace, function(err, list) {
+    ModelConfig.getData(function(err, list) {
       if (err) return next(err);
       testsuite.numberOfAvailableModels = list.length;
       next();

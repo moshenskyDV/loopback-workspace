@@ -16,8 +16,8 @@ module.exports = function(ModelConfig) {
    * @inherits Definition
    */
 
-  ModelConfig.find = function(cb) {
+  ModelConfig.getAllData = function(cb) {
     var workspace = workspaceManager.getWorkspace();
-    workspace.readAllModelConfig(this, cb); 
+    workspace.readAllModelConfig(cb); 
   };
 };

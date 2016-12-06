@@ -24,12 +24,12 @@ module.exports = function(ModelRelation) {
     ]);
   };
 
-  ModelRelation.all = function(workspaceDir, modelId, cb) {
+  ModelRelation.getAllData = function(modelId, cb) {
     var workspace = workspaceManager.getWorkspace();
     workspace.readAllModelRelation(this, modelId, cb); 
   };
 
-  ModelRelation.find = function(id, cb) {
+  ModelRelation.getData = function(id, cb) {
     var workspace = workspaceManager.getWorkspace();
     workspace.readModelRelation(id, cb); 
   };

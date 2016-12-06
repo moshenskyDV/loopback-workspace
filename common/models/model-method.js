@@ -36,7 +36,7 @@ module.exports = function(ModelMethod) {
     return data.name;
   };
 
-  ModelMethod.find = function(id, cb) {
+  ModelMethod.getData = function(id, cb) {
     var workspace = workspaceManager.getWorkspace();
     workspace.readModelMethod(id, cb); 
   };

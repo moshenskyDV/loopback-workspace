@@ -10,22 +10,22 @@
     ]
   },
   "ModelConfig": {
-    "dataSource": null
+    "dataSource": "db"
   },
   "ModelDefinition": {
-    "dataSource": null
+    "dataSource": "db"
   },
   "ModelProperty": {
-    "dataSource": null
+    "dataSource": "db"
   },
   "ModelMethod": {
-    "dataSource": null
+    "dataSource": "db"
   },
   "Middleware": {
-    "dataSource": null
+    "dataSource": "db"
   },
   "ModelRelation": {
-    "dataSource": null
+    "dataSource": "db"
   }
 }
 

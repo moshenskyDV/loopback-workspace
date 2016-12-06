@@ -21,7 +21,7 @@ module.exports = function() {
   });
 
   this.When(/^I list the middlewares$/, function(next) {
-    Middleware.all(exampleWorkspace, function(err, list) {
+    Middleware.getAllData(function(err, list) {
       if (err) return next(err);
       testsuite.numberOfAvailablePhases = list.length;
       next();
@@ -39,7 +39,7 @@ module.exports = function() {
   });
 
   this.When(/^I query for the phase$/, function(next) {
-    Middleware.find(exampleWorkspace, testsuite.phaseName, function(err, config) {
+    Middleware.getData(testsuite.phaseName, function(err, config) {
       if (err) return next(err);
       testsuite.phaseConfig = config;
       next();

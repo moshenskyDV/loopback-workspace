@@ -21,7 +21,7 @@ module.exports = function() {
 
   this.When(/^I query for the model relation$/, function(next) {
     var relationId = 'common.' + testsuite.modelName + '.' + testsuite.relationName;
-    ModelRelation.find(relationId, function(err, data) {
+    ModelRelation.getData(relationId, function(err, data) {
       if (err) return next(err);
       testsuite.relationConfig = data;
       next();

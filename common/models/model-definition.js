@@ -15,7 +15,7 @@ module.exports = function(ModelDefinition) {
    * @inherits Definition
    */
 
-  ModelDefinition.find = function(id, cb) {
+  ModelDefinition.getData = function(id, cb) {
     var workspace = workspaceManager.getWorkspace();
     workspace.readModel(id, cb); 
   };

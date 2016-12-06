@@ -20,7 +20,7 @@ module.exports = function() {
 
   this.When(/^I query for the model definition of '(.+)'$/, function(modelName, next) {
     var id = 'common.' + testsuite.modelName;
-    ModelDefinition.find(id, function(err, data) {
+    ModelDefinition.getData(id, function(err, data) {
       if (err) return next(err);
       testsuite.modelDef = data;
       next();

@@ -41,7 +41,7 @@ module.exports = function(ModelProperty) {
     returns: {type: ['string'], root: true},
   });
 
-  ModelProperty.find = function(id, cb) {
+  ModelProperty.getData = function(id, cb) {
     var workspace = workspaceManager.getWorkspace();
     workspace.readModelProperty(id, cb); 
   };

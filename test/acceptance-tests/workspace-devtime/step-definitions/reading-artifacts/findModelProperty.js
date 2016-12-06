@@ -20,7 +20,7 @@ module.exports = function() {
 
   this.When(/^I query for the model property$/, function(next) {
     var propertyId = 'common.' + testsuite.modelName + '.' + testsuite.propertyName;
-    ModelProperty.find(propertyId, function(err, data) {
+    ModelProperty.getData(propertyId, function(err, data) {
       if (err) return next(err);
       testsuite.propertyDef = data;
       next();
