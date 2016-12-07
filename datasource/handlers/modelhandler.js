@@ -5,6 +5,7 @@ var ModelProperty = require('../model/datamodel.js').ModelProperty;
 var ModelRelation = require('../model/datamodel.js').ModelRelation;
 var read = require('../util/read.js');
 var update = require('../util/update.js');
+var create = require('../util/create.js');
 
 module.exports = ModelHandler;
 
@@ -99,5 +100,17 @@ ModelHandler.prototype.updateModel = function(modelId, modelData, cb) {
     });
   } else {
     cb("Model does not exist", null);
+  }
+}
+
+ModelHandler.prototype.createModel = function(modelId, modelData, cb) {
+  var workspace = this;
+  var operations = new create.operations();
+  if(!workspace.isModelExists(modelId)) {
+    operations.createModel(modelId, modelData, function(err) { 
+      cb(err);
+    });
+  } else {
+    cb("Model already exists", null);
   }
 }

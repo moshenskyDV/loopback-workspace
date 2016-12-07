@@ -1,0 +1,15 @@
+{
+  "id": "common.employee",
+  "facetName": "common",
+  "readonly": true,
+  "name": "employee",
+  "plural": "employees",
+  "strict": true,
+  "public": true,
+  "idInjection": true,
+  "scopes": {},
+  "indexes": {},
+  "options": {
+    "validateUpsert": true
+  }
+}

@@ -5,18 +5,21 @@ var connector = app.dataSources.db.connector;
 connector.find = function(modelName, id, options, cb) {
   var listOfModels = app.models;
   var appModel = listOfModels[modelName];
-  appModel.getData(id, function(err, data){
+  appModel.getData(id, function(err, data) {
     if(!data.length) {
       cb(err, [data]);
     }  
   });
 };
 
-connector.create = function(modelName, where, data, options, cb) {
+connector.create = function(modelName, data, options, cb) {
+  if(!cb) {
+    cb = options;
+    options = null;
+  }
   var listOfModels = app.models;
   var appModel = listOfModels[modelName];
-  var id = where.id;
-  appModel.updateData(id, data, function(err) {
+  appModel.add(data, function(err) {
       cb(err);
   });
 };

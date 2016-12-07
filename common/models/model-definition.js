@@ -33,4 +33,10 @@ module.exports = function(ModelDefinition) {
     var workspace = workspaceManager.getWorkspace();
     workspace.updateModel(id, data, cb); 
   };
+
+  ModelDefinition.add = function(data, cb) {
+    var workspace = workspaceManager.getWorkspace();
+    var id = data.id;
+    workspace.createModel(id, data, cb); 
+  };
 };
