@@ -1,9 +1,10 @@
 var clone = require('lodash').clone;
-var Model = require('../datamodel.js').Model;
-var ModelMethod = require('../datamodel.js').ModelMethod;
-var ModelProperty = require('../datamodel.js').ModelProperty;
-var ModelRelation = require('../datamodel.js').ModelRelation;
-var read = require('../read.js');
+var Model = require('../model/datamodel.js').Model;
+var ModelMethod = require('../model/datamodel.js').ModelMethod;
+var ModelProperty = require('../model/datamodel.js').ModelProperty;
+var ModelRelation = require('../model/datamodel.js').ModelRelation;
+var read = require('../util/read.js');
+var update = require('../util/update.js');
 
 module.exports = ModelHandler;
 
@@ -18,12 +19,6 @@ ModelHandler.prototype.isModelExists = function(modelId) {
   } else { 
     return true;
   }
-}
-
-
-ModelHandler.prototype.updateModel = function(modelId, modelDef) {
-  var model = this.getModel(modelId);
-  model._content = modelDef;
 }
 
 ModelHandler.prototype.readModel = function(modelId, cb) {
@@ -41,9 +36,9 @@ ModelHandler.prototype.readModel = function(modelId, cb) {
       workspace.addConfigEntry(workspace, modelId, model, modelDef);
       workspace.addModelAttributes(model, modelId, modelDef);
     } else {
-      workspace.updateModel(modelId, modelData);
+      //workspace.updateModel(modelId, modelData, cb);
     }
-    cb(null, modelData)
+    cb(null, modelDef);
   });
 }
 
@@ -55,20 +50,7 @@ ModelHandler.prototype.readModelProperty = function(id, cb) {
   var modelName = parts[1];
   var propertyName = parts[2];
   var modelId = parts[0] + '.' + parts[1];
-  operations.readModel(modelId, function(err, modelDef) {
-    var modelData = clone(modelDef);
-    delete modelData['properties'];
-    delete modelData['methods'];
-    delete modelData['relations'];
-    delete modelData['validations'];
-    delete modelData['acls'];  
-    if(!workspace.isModelExists(modelId)) {
-      var model = new Model(workspace, modelId, modelData);
-      workspace.addConfigEntry(workspace, modelId, model, modelDef);
-      workspace.addModelAttributes(model, modelId, modelDef);
-    } else {
-      workspace.updateModel(modelId, modelData);
-    }
+  workspace.readModel(modelId, function(err, modelDef){
     var properties = modelDef['properties'];
     var property = properties[propertyName];
     cb(null, property);
@@ -81,25 +63,12 @@ ModelHandler.prototype.readModelMethod = function(id, cb) {
   var parts = id.split('.');
   var facet = parts[0];
   var modelName = parts[1];
-  var methodName = parts[2];
+  var propertyName = parts[2];
   var modelId = parts[0] + '.' + parts[1];
-  operations.readModel(modelId, function(err, modelDef) {
-    var modelData = clone(modelDef);
-    delete modelData['properties'];
-    delete modelData['methods'];
-    delete modelData['relations'];
-    delete modelData['validations'];
-    delete modelData['acls'];  
-    if(!workspace.isModelExists(modelId)) {
-      var model = new Model(workspace, modelId, modelData);
-      workspace.addConfigEntry(workspace, modelId, model, modelDef);
-      workspace.addModelAttributes(model, modelId, modelDef);
-    } else {
-      workspace.updateModel(modelId, modelData);
-    }
-    var properties = modelDef['methods'];
-    var property = properties[methodName];
-    cb(null, property);
+  workspace.readModel(modelId, function(err, modelDef){
+    var methods = modelDef['methods'];
+    var method = methods[methodName];
+    cb(null, method);
   });
 }
 
@@ -109,24 +78,26 @@ ModelHandler.prototype.readModelRelation = function(id, cb) {
   var parts = id.split('.');
   var facet = parts[0];
   var modelName = parts[1];
-  var relationName = parts[2];
+  var propertyName = parts[2];
   var modelId = parts[0] + '.' + parts[1];
-  operations.readModel(modelId, function(err, modelDef) {
-    var modelData = clone(modelDef);
-    delete modelData['properties'];
-    delete modelData['methods'];
-    delete modelData['relations'];
-    delete modelData['validations'];
-    delete modelData['acls'];  
-    if(!workspace.isModelExists(modelId)) {
-      var model = new Model(workspace, modelId, modelData);
-      workspace.addConfigEntry(workspace, modelId, model, modelDef);
-      workspace.addModelAttributes(model, modelId, modelDef);
-    } else {
-      workspace.updateModel(modelId, modelData);
-    }
-    var properties = modelDef['relations'];
-    var property = properties[relationName];
-    cb(null, property);
+  workspace.readModel(modelId, function(err, modelDef) {
+    var relations = modelDef['relations'];
+    var relation = relations[relationName];
+    cb(null, relation);
   });
+}
+
+ModelHandler.prototype.updateModel = function(modelId, modelData, cb) {
+  var workspace = this;
+  var operations = new update.operations();
+  if(workspace.isModelExists(modelId)) {
+    var model = workspace.getModel(modelId);
+    model.update(modelData);
+    var modelDef = model.getDefinition();
+    operations.updateModel(modelId, modelDef, function(err) { 
+      cb(err);
+    });
+  } else {
+    cb("Model does not exist", null);
+  }
 }

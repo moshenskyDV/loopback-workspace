@@ -1,6 +1,11 @@
 {
+  "id": "common.users",
+  "facetName": "common",
   "name": "Users",
   "idInjection": false,
+  "options": {
+    "validateUpsert": true
+  },
   "properties": {
     "id": {
       "type": "Number",
@@ -88,31 +93,18 @@
       "scale": null
     }
   },
-  "validations": [],
-  "relations": {
-    "roles": {
-      "type": "hasMany",
-      "model": "Roles",
-      "foreignKey": "userId",
-      "through": "RoleUsers"
-    },
-    "clients": {
-      "type": "hasMany",
-      "model": "Client",
-      "foreignKey": "userId"
-    }
-  },
-  "acls": [],
   "methods": {
     "greet": {
       "isStatic": true,
-      "accepts": [{
-        "arg": "msg",
-        "type": "string",
-        "http": {
-          "source": "query"
+      "accepts": [
+        {
+          "arg": "msg",
+          "type": "string",
+          "http": {
+            "source": "query"
+          }
         }
-      }],
+      ],
       "returns": {
         "arg": "greeting",
         "type": "string"
@@ -121,5 +113,6 @@
         "verb": "get"
       }
     }
-  }
+  },
+  "relations": {}
 }
