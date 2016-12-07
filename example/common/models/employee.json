@@ -11,5 +11,39 @@
   "indexes": {},
   "options": {
     "validateUpsert": true
-  }
+  },
+  "properties": {
+    "name": {
+      "id": "common.employee.name",
+      "modelId": "common.employee",
+      "facetName": "common",
+      "name": "string",
+      "isId": false,
+      "generated": true,
+      "required": true,
+      "index": true
+    }
+  },
+  "methods": {
+    "greet": {
+      "id": "common.employee.greet",
+      "modelId": "common.employee",
+      "facetName": "common",
+      "aliases": [
+        {}
+      ],
+      "isStatic": true,
+      "accepts": [
+        {}
+      ],
+      "returns": [
+        {}
+      ],
+      "http": [
+        {}
+      ],
+      "shared": true
+    }
+  },
+  "relations": {}
 }

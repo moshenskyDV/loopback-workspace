@@ -40,4 +40,10 @@ module.exports = function(ModelMethod) {
     var workspace = workspaceManager.getWorkspace();
     workspace.readModelMethod(id, cb); 
   };
+
+  ModelMethod.add = function(data, cb) {
+    var workspace = workspaceManager.getWorkspace();
+    var id = data.id;
+    workspace.createModelMethod(id, data, cb); 
+  };
 };

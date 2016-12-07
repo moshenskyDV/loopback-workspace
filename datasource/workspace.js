@@ -8,7 +8,10 @@ var ModelProperty = require('./model/datamodel.js').ModelProperty;
 var ModelRelation = require('./model/datamodel.js').ModelRelation;
 var read = require('./util/read.js');
 var inheritsFrom = require('./util/common.js').inheritsFrom;
+var mixin = require('./util/common.js').mixin;
 var ModelHandler = require('./handlers/modelhandler.js');
+var PropertyHandler = require('./handlers/propertyhandler.js');
+var MethodHandler = require('./handlers/methodhandler.js');
 
 module.exports.loader = function() {
   return Workspace;
@@ -24,15 +27,6 @@ function Workspace(rootFolder) {
 
 inheritsFrom(Workspace, Graph);
 
-function mixin(target, source) {
-  for (var ix in source) {
-    if(typeof source[ix] === 'function') {
-      var mx = source[ix];
-      target[ix] = mx;
-    }
-  } 
-}
-
 function lazyLoadModel(workspace, facet, modelName) {
   var modelId = facet + "." + modelName;
   var options = {};
@@ -47,6 +41,8 @@ Workspace.prototype.addConfigEntry = function(Workspace, id, model, modelDef, op
 }
 
 mixin(Workspace.prototype, ModelHandler.prototype);
+mixin(Workspace.prototype, PropertyHandler.prototype);
+mixin(Workspace.prototype, MethodHandler.prototype);
 
 
 Workspace.prototype.getModel = function(modelId) {
@@ -93,9 +89,15 @@ Workspace.prototype.addModelAttributes = function(model, modelId, modelDef) {
   var parts = modelId.split('.');
   var facet = parts[0];
   var Workspace = this;
-  Workspace.addModelProperties(model, modelId, properties);
-  Workspace.addModelMethods(model, modelId, methods);
-  Workspace.addModelRelations(model, modelId, relations);
+  if(properties) {
+    Workspace.addModelProperties(model, modelId, properties);
+  }
+  if(methods) {
+    Workspace.addModelMethods(model, modelId, methods);
+  }
+  if(relations) {
+    Workspace.addModelRelations(model, modelId, relations);
+  }  
 }
 
 function initWorkspace(workspace) {

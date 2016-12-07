@@ -35,7 +35,7 @@ function ModelRelation (wkspace, modelId, relationName, fromModel, toModel) {
 }
 
 function Model(Workspace, id, modelDef, options) {
-  Node.call(this, Workspace, "ModelDefinition", id, this);
+  Node.call(this, Workspace, "ModelDefinition", id, modelDef);
   this.properties = {};
   this.methods = {};
   this.relations = {};
@@ -75,3 +75,10 @@ Model.prototype.update = function(modelData) {
   this._content = modelData;
 }
 
+Model.prototype.addProperty = function(name, property) {
+  this.properties[name] = property;
+}
+
+Model.prototype.addMethod = function(name, method) {
+  this.methods[name] = method;
+}

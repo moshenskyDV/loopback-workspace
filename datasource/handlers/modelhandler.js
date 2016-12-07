@@ -43,36 +43,6 @@ ModelHandler.prototype.readModel = function(modelId, cb) {
   });
 }
 
-ModelHandler.prototype.readModelProperty = function(id, cb) {
-  var workspace = this;
-  var operations = new read.operations();
-  var parts = id.split('.');
-  var facet = parts[0];
-  var modelName = parts[1];
-  var propertyName = parts[2];
-  var modelId = parts[0] + '.' + parts[1];
-  workspace.readModel(modelId, function(err, modelDef){
-    var properties = modelDef['properties'];
-    var property = properties[propertyName];
-    cb(null, property);
-  });
-}
-
-ModelHandler.prototype.readModelMethod = function(id, cb) {
-  var workspace = this;
-  var operations = new read.operations();
-  var parts = id.split('.');
-  var facet = parts[0];
-  var modelName = parts[1];
-  var propertyName = parts[2];
-  var modelId = parts[0] + '.' + parts[1];
-  workspace.readModel(modelId, function(err, modelDef){
-    var methods = modelDef['methods'];
-    var method = methods[methodName];
-    cb(null, method);
-  });
-}
-
 ModelHandler.prototype.readModelRelation = function(id, cb) {
   var workspace = this;
   var operations = new read.operations();

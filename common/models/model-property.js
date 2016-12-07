@@ -45,4 +45,10 @@ module.exports = function(ModelProperty) {
     var workspace = workspaceManager.getWorkspace();
     workspace.readModelProperty(id, cb); 
   };
+
+  ModelProperty.add = function(data, cb) {
+    var workspace = workspaceManager.getWorkspace();
+    var id = data.id;
+    workspace.createModelProperty(id, data, cb); 
+  };
 };
