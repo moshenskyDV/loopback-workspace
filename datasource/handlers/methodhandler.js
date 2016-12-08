@@ -7,6 +7,7 @@ var read = require('../util/read.js');
 var update = require('../util/update.js');
 var create = require('../util/create.js');
 
+
 module.exports = MethodHandler;
 
 function MethodHandler() {
@@ -41,17 +42,32 @@ MethodHandler.prototype.createModelMethod = function(id, methodDef, cb) {
   var methodName = parts[2];
   var modelId = parts[0] + '.' + parts[1];
   var operations = new update.operations();
-  workspace.readModel(modelId, function(err, data) {
+  
+  var refresh = function(next) {
+    workspace.readModel(modelId, function(err, data) {
+      next();
+    });
+  }
+  var updateModel = function(next) {
     if(workspace.isModelExists(modelId)) {
       var model = workspace.getModel(modelId);
       var method = new ModelMethod(workspace, modelId, methodName, methodDef);
       model.addMethod(methodName, method);
       var modelDef = model.getDefinition();
       operations.updateModel(modelId, modelDef, function(err) { 
-        cb(err);
+        next(err);
       });
     } else {
-      cb("Model does not exists", null);
+      next("Model does not exists", null);
     }
-  });
+  }
+
+  var callBack = function(err, data) {
+    cb(err, data);
+  }
+  var task = workspace.createTask(callBack);
+  task.addFunction(refresh);
+  task.addFunction(updateModel);
+  workspace.addTask(task);
+  workspace.execute();
 }

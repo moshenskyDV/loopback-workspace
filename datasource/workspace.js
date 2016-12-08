@@ -12,6 +12,7 @@ var mixin = require('./util/common.js').mixin;
 var ModelHandler = require('./handlers/modelhandler.js');
 var PropertyHandler = require('./handlers/propertyhandler.js');
 var MethodHandler = require('./handlers/methodhandler.js');
+var ProcessorClass = require('./util/processor.js').Processor;
 
 module.exports.loader = function() {
   return Workspace;
@@ -23,6 +24,7 @@ function Workspace(rootFolder) {
   this.directory = rootFolder;
   this.middlewarePhases = [];
   //initMiddleware(this);
+  this.processor = new ProcessorClass();
 };
 
 inheritsFrom(Workspace, Graph);
@@ -38,6 +40,18 @@ function lazyLoadModel(workspace, facet, modelName) {
 
 Workspace.prototype.addConfigEntry = function(Workspace, id, model, modelDef, options) {
   var modelConfig = new ModelConfig(Workspace, id, modelDef, options);
+}
+
+Workspace.prototype.createTask = function(cb) {
+  return this.processor.createTask(cb);
+}
+
+Workspace.prototype.addTask = function(task) {
+  return this.processor.addTask(task);
+}
+
+Workspace.prototype.execute = function() {
+  return this.processor.execute();
 }
 
 mixin(Workspace.prototype, ModelHandler.prototype);
