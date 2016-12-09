@@ -4,7 +4,6 @@
 // License text available at https://opensource.org/licenses/MIT
 'use strict';
 var clone = require('lodash').clone;
-var workspaceManager = require('../../datasource/workspaceManager.js');
 
 module.exports = function(ModelDefinition) {
   /**
@@ -15,28 +14,50 @@ module.exports = function(ModelDefinition) {
    * @inherits Definition
    */
 
-  ModelDefinition.getData = function(id, cb) {
-    var workspace = workspaceManager.getWorkspace();
-    workspace.readModel(id, function(err, modelDef) {
-      var modelData = clone(modelDef);
-      delete modelData['properties'];
-      delete modelData['methods'];
-      delete modelData['relations'];
-      delete modelData['validations'];
-      delete modelData['acls'];
-      modelData['id'] = id;
-      cb(null, modelData);
-    }); 
-  };
+  ModelDefinition.on('dataSourceAttached', function(eventData) {
+    var connector = ModelDefinition.getConnector();
+    
+    ModelDefinition.create = function(data, options, cb) {
+      if(typeof options === 'function') {
+        cb = options;
+        options = null;
+      }
+      var id = data.id;
+      delete data['id'];
+      delete data['facetName'];
+      connector.createModel(id, data, function(err, modelDef) {
+        if(err) return cb(err);
+        var modelData = clone(modelDef);
+        modelData['id'] = id;
+        cb(null, modelData);
+      });
+    };
 
-  ModelDefinition.updateData = function(id, data, cb) {
-    var workspace = workspaceManager.getWorkspace();
-    workspace.updateModel(id, data, cb); 
-  };
+    ModelDefinition.find = function(filter, options, cb) {
+      var id = filter.where.id;
+      connector.getModel(id, function(err, modelDef) {
+        if(err) return cb(err);
+        var modelData = clone(modelDef);
+        delete modelData['properties'];
+        delete modelData['methods'];
+        delete modelData['relations'];
+        delete modelData['validations'];
+        delete modelData['acls'];
+        modelData['id'] = id;
+        modelData = [modelData];
+        cb(null, modelData);
+      });
+    };
 
-  ModelDefinition.add = function(data, cb) {
-    var workspace = workspaceManager.getWorkspace();
-    var id = data.id;
-    workspace.createModel(id, data, cb); 
-  };
+    ModelDefinition.updateAttributes = function(id, data, options, cb) {
+      delete data['id'];
+      delete data['facetName'];
+      connector.updateModel(id, data, function(err, modelDef) {
+        if(err) return cb(err);
+        var modelData = clone(modelDef);
+        modelData['id'] = id;
+        cb(null, modelData);
+      });
+    };
+  });
 };

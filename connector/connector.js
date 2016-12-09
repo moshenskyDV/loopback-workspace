@@ -1,66 +1,62 @@
 var app = require('../server/server.js');
 var loopback = require('loopback');
+var workspaceManager = require('../datasource/workspaceManager.js');
 var connector = app.dataSources.db.connector;
 
+connector.getModel = function(id, cb) {
+  var workspace = workspaceManager.getWorkspace();
+  workspace.readModel(id, cb);
+};
+
+connector.updateModel = function(id, data, cb) {
+  var workspace = workspaceManager.getWorkspace();
+  workspace.updateModel(id, data, cb); 
+};
+
+connector.createModel = function(id, data, cb) {
+  var workspace = workspaceManager.getWorkspace();
+  workspace.createModel(id, data, cb); 
+};
+
+connector.getModelMethod = function(id, cb) {
+  var workspace = workspaceManager.getWorkspace();
+  workspace.readModelMethod(id, cb); 
+};
+
+connector.createModelMethod = function(id, data, cb) {
+  var workspace = workspaceManager.getWorkspace();
+  workspace.createModelMethod(id, data, cb); 
+};
+
+connector.getModelProperty = function(id, cb) {
+  var workspace = workspaceManager.getWorkspace();
+  workspace.readModelProperty(id, cb); 
+};
+
+connector.createModelProperty = function(id, data, cb) {
+  var workspace = workspaceManager.getWorkspace();
+  workspace.createModelProperty(id, data, cb); 
+};
+
 connector.find = function(modelName, id, options, cb) {
-  var listOfModels = app.models;
-  var appModel = listOfModels[modelName];
-  appModel.getData(id, function(err, data) {
-    if(!data.length) {
-      cb(err, [data]);
-    }  
-  });
+  throw new Error('Not Implemented');
 };
 
 connector.create = function(modelName, data, options, cb) {
-  if(!cb) {
-    cb = options;
-    options = null;
-  }
-  var listOfModels = app.models;
-  var appModel = listOfModels[modelName];
-  appModel.add(data, function(err) {
-      cb(err);
-  });
+  throw new Error('Not Implemented');
 };
 
 connector.update = function(modelName, where, data, options, cb) {
-  var listOfModels = app.models;
-  var appModel = listOfModels[modelName];
-  var id = where.id;
-  appModel.updateData(id, data, function(err) {
-      cb(err);
-  });
+  throw new Error('Not Implemented');
 };
 
 connector.updateAttributes = function(modelName, id, data, options, cb) {
-  var listOfModels = app.models;
-  var appModel = listOfModels[modelName];
-  appModel.updateData(id, data, function(err) {
-      cb(err);
-  });
+  throw new Error('Not Implemented');
+
 };
 
 connector.all = function(modelName, filter, options, cb) {
-  var listOfModels = app.models;
-  var appModel = listOfModels[modelName];
-  if(!filter.where){
-    appModel.getAllData(function(err, data) {
-      if(!data.length) {
-        cb(err, [data]);
-      } else {
-        cb(err, data);
-      }  
-    });
-  } else {
-    appModel.getData(filter.where.id,  function(err, data){
-      if(!data.length) {
-        cb(err, [data]);
-      } else {
-        cb(err, data);
-      } 
-    });
-  }
+  throw new Error('Not Implemented');
 };
 
 connector.patchOrCreateWithWhere = function() {

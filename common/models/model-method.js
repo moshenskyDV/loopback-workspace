@@ -6,8 +6,8 @@
 
 var semver = require('semver');
 var path = require('path');
-var fs = require('fs-extra');
-var workspaceManager = require('../../datasource/workspaceManager.js');
+var clone = require('lodash').clone;
+
 
 /**
   * Represents a Method of a LoopBack `Model`.
@@ -36,14 +36,28 @@ module.exports = function(ModelMethod) {
     return data.name;
   };
 
-  ModelMethod.getData = function(id, cb) {
-    var workspace = workspaceManager.getWorkspace();
-    workspace.readModelMethod(id, cb); 
-  };
+  ModelMethod.on('dataSourceAttached', function(eventData) {
+    var connector = ModelMethod.getConnector();
+    
+    ModelMethod.create = function(data, options, cb) {
+      if(typeof options === 'function') {
+        cb = options;
+        options = null;
+      }
+      var id = data.id;
+      delete data['id'];
+      delete data['facetName'];
+      connector.createModelMethod(id, data, cb);
+    };
 
-  ModelMethod.add = function(data, cb) {
-    var workspace = workspaceManager.getWorkspace();
-    var id = data.id;
-    workspace.createModelMethod(id, data, cb); 
-  };
+    ModelMethod.find = function(filter, options, cb) {
+      var id = filter.where.id;
+      connector.getModelMethod(id, function(err, methodDef){
+        if(err) return cb(err);
+        var data = clone(methodDef);
+        data['id'] = id;
+        cb(null, [data]); 
+      });
+    };
+  });
 };

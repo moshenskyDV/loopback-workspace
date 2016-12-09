@@ -5,7 +5,7 @@
 'use strict';
 var fs = require('fs-extra');
 var path = require('path');
-var workspaceManager = require('../../datasource/workspaceManager.js');
+var clone = require('lodash').clone;
 
 module.exports = function(ModelConfig) {
   /**

@@ -43,6 +43,26 @@
         {}
       ],
       "shared": true
+    },
+    "anotherMethod": {
+      "id": "common.employee.anotherMethod",
+      "modelId": "common.employee",
+      "facetName": "common",
+      "aliases": [
+        {}
+      ],
+      "isStatic": true,
+      "accepts": [
+        {}
+      ],
+      "returns": [
+        {}
+      ],
+      "description": "string",
+      "http": [
+        {}
+      ],
+      "shared": true
     }
   },
   "relations": {}

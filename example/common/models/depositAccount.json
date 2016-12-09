@@ -1,0 +1,7 @@
+{
+  "name": "depositAccount",
+  "idInjection": false,
+  "options": {
+    "validateUpsert": true
+  }
+}

@@ -5,7 +5,7 @@
 'use strict';
 var fs = require('fs-extra');
 var path = require('path');
-var workspaceManager = require('../../datasource/workspaceManager.js');
+var clone = require('lodash').clone;
 
 /**
   * Represents a Property of a LoopBack `Model`.
@@ -41,14 +41,24 @@ module.exports = function(ModelProperty) {
     returns: {type: ['string'], root: true},
   });
 
-  ModelProperty.getData = function(id, cb) {
-    var workspace = workspaceManager.getWorkspace();
-    workspace.readModelProperty(id, cb); 
-  };
+  ModelProperty.on('dataSourceAttached', function(eventData) {
+    var connector = ModelProperty.getConnector();
+    
+    ModelProperty.create = function(data, options, cb) {
+      if(typeof options === 'function') {
+        cb = options;
+        options = null;
+      }
+      var id = data.id;
+      delete data['id'];
+      delete data['facetName'];
+      connector.createModelProperty(id, data, cb);
+    };
 
-  ModelProperty.add = function(data, cb) {
-    var workspace = workspaceManager.getWorkspace();
-    var id = data.id;
-    workspace.createModelProperty(id, data, cb); 
-  };
+    ModelProperty.find = function(filter, options, cb) {
+      var id = filter.where.id;
+      connector.getModelProperty(id, cb);
+    };
+  });
+
 };

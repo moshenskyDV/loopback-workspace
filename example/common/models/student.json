@@ -1,0 +1,13 @@
+{
+  "readonly": true,
+  "name": "student",
+  "plural": "students",
+  "strict": true,
+  "public": true,
+  "idInjection": true,
+  "scopes": {},
+  "indexes": {},
+  "options": {
+    "validateUpsert": true
+  }
+}

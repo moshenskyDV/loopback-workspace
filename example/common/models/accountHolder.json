@@ -1,0 +1,7 @@
+{
+  "name": "accountHolder",
+  "idInjection": false,
+  "options": {
+    "validateUpsert": true
+  }
+}

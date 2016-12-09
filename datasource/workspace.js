@@ -6,13 +6,13 @@ var ModelConfig = require('./model/datamodel.js').ModelConfig;
 var ModelMethod = require('./model/datamodel.js').ModelMethod;
 var ModelProperty = require('./model/datamodel.js').ModelProperty;
 var ModelRelation = require('./model/datamodel.js').ModelRelation;
-var read = require('./util/read.js');
 var inheritsFrom = require('./util/common.js').inheritsFrom;
 var mixin = require('./util/common.js').mixin;
 var ModelHandler = require('./handlers/modelhandler.js');
 var PropertyHandler = require('./handlers/propertyhandler.js');
 var MethodHandler = require('./handlers/methodhandler.js');
 var ProcessorClass = require('./util/processor.js').Processor;
+
 
 module.exports.loader = function() {
   return Workspace;
@@ -50,7 +50,16 @@ Workspace.prototype.addTask = function(task) {
   return this.processor.addTask(task);
 }
 
-Workspace.prototype.execute = function() {
+Workspace.prototype.execute = function(functionList, callBack) {
+  var task = this.createTask(callBack);
+  functionList.forEach(function(f){
+     task.addFunction(f);
+  });
+  this.addTask(task);
+  this.trigger();
+}
+
+Workspace.prototype.trigger = function() {
   return this.processor.execute();
 }
 
