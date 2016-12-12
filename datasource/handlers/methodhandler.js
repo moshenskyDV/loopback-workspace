@@ -51,11 +51,18 @@ MethodHandler.prototype.createModelMethod = function(id, methodDef, cb) {
   }
   var updateModel = function(next) {
     var model = workspace.getModel(modelId);
-    model.addMethod(workspace, modelId, methodName, methodDef, next);
+    workspace.addMethod(workspace, modelId, methodName, methodDef, function(err, data) {
+      if(err) return next(err);
+      else
+      next(err, data);
+    });
   }
 
-  var callBack = function(err, data) {
-    cb(err, data);
+  var callBack = function(err, results) {
+    if(err) return cb(err);
+    else {
+      cb(null, methodDef);
+    }
   }
 
   var taskList = [refresh, updateModel];

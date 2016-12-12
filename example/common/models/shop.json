@@ -10,7 +10,55 @@
   "options": {
     "validateUpsert": true
   },
-  "properties": {},
-  "methods": {},
+  "properties": {
+    "name": {
+      "modelId": "common.shop",
+      "name": "string",
+      "type": {},
+      "isId": true,
+      "generated": true,
+      "required": true,
+      "index": true,
+      "description": "string"
+    }
+  },
+  "methods": {
+    "undefined": {
+      "modelId": "shop",
+      "aliases": [
+        {}
+      ],
+      "isStatic": true,
+      "accepts": [
+        {}
+      ],
+      "returns": [
+        {}
+      ],
+      "description": "string",
+      "http": [
+        {}
+      ],
+      "shared": true
+    },
+    "testmethod": {
+      "modelId": "shop",
+      "aliases": [
+        {}
+      ],
+      "isStatic": true,
+      "accepts": [
+        {}
+      ],
+      "returns": [
+        {}
+      ],
+      "description": "string",
+      "http": [
+        {}
+      ],
+      "shared": true
+    }
+  },
   "relations": {}
 }

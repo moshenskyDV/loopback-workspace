@@ -51,11 +51,18 @@ PropertyHandler.prototype.createModelProperty = function(id, propertyDef, cb) {
   }
   var updateProperty = function(next) {
     var model = workspace.getModel(modelId);
-    model.addProperty(workspace, modelId, propertyName, propertyDef, next);
+    workspace.addProperty(workspace, modelId, propertyName, propertyDef, function(err, data) {
+      if(err) return next(err);
+      else
+      next(err, data);
+    });
   }
 
-  var callBack = function(err, data) {
-    cb(err, data);
+  var callBack = function(err, results) {
+    if(err) return cb(err);
+    else {
+      cb(null, propertyDef);
+    }
   }
 
   var taskList = [refresh, updateProperty];

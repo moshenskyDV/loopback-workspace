@@ -105,6 +105,14 @@ ModelHandler.prototype.createModel = function(modelId, modelData, cb) {
     });
   }
 
+  var refreshModelConfig = function(next) {
+    workspace.refreshModelConfig(function(err, ModelConfig){
+      if(err) { next(err); }
+      else
+      next(null, ModelConfig);
+    });
+  }
+
   var create = function(next) {
     workspace.addModel(modelId, modelData, function(err) { 
       next(err);
@@ -116,14 +124,13 @@ ModelHandler.prototype.createModel = function(modelId, modelData, cb) {
       next(err);
     });
   }
-  
+   
   var callBack = function(err, results) {
     if(err) return cb(err);
-    var modelDef = results[0];
-    cb(null, modelDef);
+    cb(null, modelData);
   }
 
-  var taskList = [refresh, create, addModelConfig];
+  var taskList = [refresh, refreshModelConfig, create, addModelConfig];
   workspace.execute(taskList, callBack);
 }
 

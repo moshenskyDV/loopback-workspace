@@ -5,12 +5,12 @@ Feature: Users should be able to load multiple workspaces
   Background: workspace component is initialized
 
   Scenario: Load a workspace
-    Given that a 'EXAMPLE' workspace
+    Given that a 'EXAMPLE' workspace exists
     When I load the workspace
     Then a workspace ID is returned
 
   Scenario: Load another workspace
-    Given that a 'SECONDARY' workspace
+    Given that a 'SECONDARY' workspace exists
     When I load the workspace
     Then a workspace ID is returned
 

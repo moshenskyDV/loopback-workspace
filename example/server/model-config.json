@@ -1,5 +1,9 @@
 {
-  "shop": {
+  "Order": {
+    "datasource": "db",
+    "public": true
+  },
+  "Review": {
     "datasource": "db",
     "public": true
   }

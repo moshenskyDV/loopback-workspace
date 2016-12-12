@@ -1,0 +1,18 @@
+{
+  "readonly": true,
+  "name": "Order",
+  "description": "string",
+  "plural": "Orders",
+  "base": "string",
+  "strict": true,
+  "public": true,
+  "idInjection": true,
+  "scopes": {},
+  "indexes": {},
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {},
+  "methods": {},
+  "relations": {}
+}

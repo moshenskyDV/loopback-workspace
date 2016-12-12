@@ -47,7 +47,12 @@ module.exports = function(ModelMethod) {
       var id = data.id;
       delete data['id'];
       delete data['facetName'];
-      connector.createModelMethod(id, data, cb);
+      connector.createModelMethod(id, data, function(err, methodDef){
+        if(err) return cb(err);
+        var data = clone(methodDef);
+        data['id'] = id;
+        cb(null, data);
+      });
     };
 
     ModelMethod.find = function(filter, options, cb) {

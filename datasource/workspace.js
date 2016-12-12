@@ -27,7 +27,7 @@ function Workspace(rootFolder) {
   this.middlewarePhases = [];
   this.facet = {};
   var serverFacet = new Facet(this, 'server', {});
-  var commonFacet = new Facet(this, 'server', {});
+  var commonFacet = new Facet(this, 'common', {});
   this.facet['server'] = serverFacet;
   this.facet['common'] = commonFacet;
   //initMiddleware(this);
@@ -71,12 +71,13 @@ Workspace.prototype.getFacet = function(facetName) {
   return this.facet[facetName];
 }
 
-function lazyLoadModel(workspace, facet, modelName) {
+Workspace.prototype.lazyLoadModel = function lazyLoadModel(workspace, facet, modelName) {
   var modelId = facet + "." + modelName;
   var options = {};
   options.lazyLoadModel = true;
   var model = new Model(workspace, modelId, {}, options);
-  workspace.addConfigEntry(workspace, modelId, model, {}, options);
+  var facet = workspace.getFacet(facet);
+  facet.addModelConfig(modelName, model, {});
   return model;
 }
 

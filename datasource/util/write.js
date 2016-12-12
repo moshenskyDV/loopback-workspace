@@ -54,7 +54,7 @@ writeOperations.prototype.writeModel = function(id, data, cb) {
   var file = path.resolve(loader().getDirectory(), facet, folder, modelName + '.json');
   fs.writeJson(file, data, function(err) {
     if(err) return cb(err);
-    cb(null);
+    cb(null, data);
   });
 }
 

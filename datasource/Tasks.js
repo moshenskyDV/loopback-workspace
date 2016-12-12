@@ -85,6 +85,9 @@ Tasks.prototype.refreshModelConfig = function(cb) {
       var config = modelConfigurations[key];
       var modelId = facetName + "." + key;
       var model = workspace.getModel(modelId);
+      if(!model) {
+        model = workspace.lazyLoadModel(workspace, facetName, key);
+      }
       facet.addModelConfig(key, model, config);
     });
     cb(null, modelConfigurations);
@@ -150,9 +153,9 @@ Tasks.prototype.addMethod = function (workspace, modelId, methodName, methodDef,
   if(workspace.isModelExists(modelId)) {
     var model = workspace.getModel(modelId);
     var method = new ModelMethod(workspace, modelId, methodName, methodDef);
-    model.addMethod(methodName, method);
+    model.setMethod(methodName, method);
     var modelDef = model.getDefinition();
-    operations.writeModel(modelId, modelDef, function(err) { 
+    operations.writeModel(modelId, modelDef, function(err, data) { 
       if(err) return cb(err);
       cb(null, modelDef);
     });
@@ -166,10 +169,11 @@ Tasks.prototype.addProperty = function (workspace, modelId, propertyName, proper
   if(workspace.isModelExists(modelId)) {
     var model = workspace.getModel(modelId);
     var property = new ModelProperty(workspace, modelId, propertyName, propertyDef);
-    model.addProperty(propertyName, property);
+    model.setProperty(propertyName, property);
     var modelDef = model.getDefinition();
-    operations.writeModel(modelId, modelDef, function(err) { 
-      cb(err);
+    operations.writeModel(modelId, modelDef, function(err, data) {
+      if(err) return cb(err); 
+      cb(null, data);
     });
   } else {
     cb("Model does not exists", null);
