@@ -41,7 +41,19 @@ Graph.prototype.getNode = function(domain, name) {
 
 Graph.prototype.updateNode = function(domain, name, value) {
   this._cache[domain][name]._content = value;
-} 
+}
+
+Graph.prototype.deleteNode = function(domain, name, cb) {
+  var node = this._cache[domain][name];
+  if(node._inboundLinks && Object.keys(node._inboundLinks).length > 0) {
+    cb('Integrity Constraint, cannot delete');
+  }
+  delete this._cache[domain][name];
+}  
+
+Node.prototype.get = function(fieldName) {
+  return this._content[fieldName];
+}
 
 Link.prototype.remove = function() {
   var name = this._name;

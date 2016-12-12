@@ -1,0 +1,16 @@
+{
+  "readonly": true,
+  "name": "device",
+  "plural": "devices",
+  "strict": true,
+  "public": true,
+  "idInjection": true,
+  "scopes": {},
+  "indexes": {},
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {},
+  "methods": {},
+  "relations": {}
+}

@@ -3,9 +3,14 @@ var loopback = require('loopback');
 var workspaceManager = require('../datasource/workspaceManager.js');
 var connector = app.dataSources.db.connector;
 
-connector.getModel = function(id, cb) {
+connector.findModelConfig = function(id, cb) {
   var workspace = workspaceManager.getWorkspace();
-  workspace.readModel(id, cb);
+  workspace.findModelConfig(id, cb);
+};
+
+connector.findModel = function(id, cb) {
+  var workspace = workspaceManager.getWorkspace();
+  workspace.findModel(id, cb);
 };
 
 connector.updateModel = function(id, data, cb) {
@@ -13,14 +18,26 @@ connector.updateModel = function(id, data, cb) {
   workspace.updateModel(id, data, cb); 
 };
 
+connector.createFacet = function(id, data, cb) {
+  var workspace = workspaceManager.getWorkspace();
+  workspace.createFacet(id, data, cb); 
+};
+
 connector.createModel = function(id, data, cb) {
   var workspace = workspaceManager.getWorkspace();
   workspace.createModel(id, data, cb); 
 };
 
-connector.getModelMethod = function(id, cb) {
+connector.deleteModel = function(id, cb) {
   var workspace = workspaceManager.getWorkspace();
-  workspace.readModelMethod(id, cb); 
+  workspace.deleteModel(id, function(err, data){
+    if (err) cb(err);
+  }); 
+};
+
+connector.findModelMethod = function(id, cb) {
+  var workspace = workspaceManager.getWorkspace();
+  workspace.findModelMethod(id, cb); 
 };
 
 connector.createModelMethod = function(id, data, cb) {
@@ -28,9 +45,9 @@ connector.createModelMethod = function(id, data, cb) {
   workspace.createModelMethod(id, data, cb); 
 };
 
-connector.getModelProperty = function(id, cb) {
+connector.findModelProperty = function(id, cb) {
   var workspace = workspaceManager.getWorkspace();
-  workspace.readModelProperty(id, cb); 
+  workspace.findModelProperty(id, cb); 
 };
 
 connector.createModelProperty = function(id, data, cb) {
@@ -75,12 +92,13 @@ connector.exists = function (model, id, done) {
   throw new Error('Not Implemented');
 };
 
-connector.destroy = function destroy(model, id, done) {
+connector.destroy = function (model, id, done) {
   throw new Error('Not Implemented');
 };
 
-connector.destroyAll = function destroyAll(model, filter, done) {
-  throw new Error('Not Implemented');
+connector.destroyAll = function (model, filter, done) {
+  var modelDef = app.models[model]
+  modelDef.destroyAll(filter, done);
 };
 
 connector.count = function count(model, done, filter) {

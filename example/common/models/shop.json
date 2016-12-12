@@ -1,0 +1,16 @@
+{
+  "readonly": true,
+  "name": "shop",
+  "plural": "shops",
+  "strict": true,
+  "public": true,
+  "idInjection": true,
+  "scopes": {},
+  "indexes": {},
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {},
+  "methods": {},
+  "relations": {}
+}

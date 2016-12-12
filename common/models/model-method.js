@@ -52,7 +52,7 @@ module.exports = function(ModelMethod) {
 
     ModelMethod.find = function(filter, options, cb) {
       var id = filter.where.id;
-      connector.getModelMethod(id, function(err, methodDef){
+      connector.findModelMethod(id, function(err, methodDef){
         if(err) return cb(err);
         var data = clone(methodDef);
         data['id'] = id;

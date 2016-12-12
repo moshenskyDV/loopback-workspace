@@ -12,25 +12,41 @@ var Middleware = app.models.Middleware;
 var ModelConfig = app.models.ModelConfig;
 var ModelProperty = app.models.ModelProperty;
 var ModelMethod = app.models.ModelMethod;
-var loader = function(){
+var loader = function() {
   return require('../workspaceManager.js');
 }
 
-module.exports.operations = updateOperations;
+module.exports.operations = writeOperations;
 
-function updateOperations(){
-  this._id = "update";
+function writeOperations(){
+  this._id = "write";
 }
 
-updateOperations.prototype.updateModelConfig = function(modelConfig, data, cb) {
+writeOperations.prototype.writeFacet = function(facetName, facetData, cb) {
+  var facetFolder = path.join(loader().getDirectory(), 'server');
+  fs.mkdir(facetFolder, function(err) {
+    if (err) {
+      if (!err.code == 'EEXIST') {// ignore the error if the folder already exists
+        cb(err);
+      }   
+    }
+    var serverConfigPath = path.join(loader().getDirectory(), 'server/config.json');
+    fs.writeJson(serverConfigPath, facetData, function(err) {
+      if(err) return cb(err);
+      cb(null);
+    }); 
+  });
+}
+
+writeOperations.prototype.writeModelConfig = function(modelConfigData, cb) {
   var modelConfigFilePath = path.join(loader().getDirectory(), 'server/model-config.json');
-  fs.writeJson(modelConfigFilePath, data, function(err) {
+  fs.writeJson(modelConfigFilePath, modelConfigData, function(err) {
     if(err) return cb(err);
     cb(null);
   }); 
 }
 
-updateOperations.prototype.updateModel = function(id, data, cb) {
+writeOperations.prototype.writeModel = function(id, data, cb) {
   var parts = id.split('.');
   var facet = parts[0];
   var modelName = parts[1];
@@ -42,7 +58,7 @@ updateOperations.prototype.updateModel = function(id, data, cb) {
   });
 }
 
-updateOperations.prototype.updateMiddleware = function(id, data, cb) {
+writeOperations.prototype.writeMiddleware = function(id, data, cb) {
   var file = path.resolve(loader().getDirectory(), 'server/middleware.json');
   fs.writeJson(file, data, function(err) {
     if(err) return cb(err);

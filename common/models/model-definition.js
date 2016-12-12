@@ -26,16 +26,21 @@ module.exports = function(ModelDefinition) {
       delete data['id'];
       delete data['facetName'];
       connector.createModel(id, data, function(err, modelDef) {
-        if(err) return cb(err);
-        var modelData = clone(modelDef);
-        modelData['id'] = id;
-        cb(null, modelData);
+        if(err) {
+          cb(err);
+        } else if(modelDef) {
+          var modelData = clone(modelDef);
+          modelData['id'] = id;
+          cb(null, modelData);
+        } else {
+          cb('Error : no data returned from connector');
+        } 
       });
     };
 
     ModelDefinition.find = function(filter, options, cb) {
       var id = filter.where.id;
-      connector.getModel(id, function(err, modelDef) {
+      connector.findModel(id, function(err, modelDef) {
         if(err) return cb(err);
         var modelData = clone(modelDef);
         delete modelData['properties'];
@@ -59,5 +64,14 @@ module.exports = function(ModelDefinition) {
         cb(null, modelData);
       });
     };
+
+    ModelDefinition.destroyAll = function (filter, cb) {
+      var id = filter.id;
+      connector.deleteModel(id, function(err, data) {
+        if(err) return cb(err);
+        cb(null, 'Model Deleted');
+      });
+    };
+
   });
 };

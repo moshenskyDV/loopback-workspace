@@ -1,9 +1,3 @@
-var clone = require('lodash').clone;
-var Model = require('../model/datamodel.js').Model;
-var ModelMethod = require('../model/datamodel.js').ModelMethod;
-var ModelProperty = require('../model/datamodel.js').ModelProperty;
-var ModelRelation = require('../model/datamodel.js').ModelRelation;
-
 module.exports = ModelHandler;
 
 function ModelHandler() {
@@ -19,11 +13,47 @@ ModelHandler.prototype.isModelExists = function(modelId) {
   }
 }
 
-ModelHandler.prototype.readModel = function(modelId, cb) {
+
+ModelHandler.prototype.deleteModel = function(modelId, cb) {
   var workspace = this;
 
-  var readModel = function(next) {
-    workspace.readModel(modelId, function(err, modelDef){
+  var refresh = function(next) {
+    workspace.refreshModel(modelId, function(err, modelDef){
+      if(err) {
+        next(err);
+      } else
+      next(null, modelDef);
+    });
+  }
+
+  var refreshModelConfig = function(next) {
+    workspace.refreshModelConfig(function(err, ModelConfig){
+      if(err) { next(err); }
+      else
+      next(null, ModelConfig);
+    });
+  }
+
+  var remove = function(next) {
+    workspace.removeModel(modelId, function(err, data){
+      if(err) { next(err); }
+      else {next(data);}
+    });
+  }
+
+  var callBack = function(err) {
+    if(err) return cb(err);
+  }
+
+  var taskList = [refresh, refreshModelConfig, remove];
+  workspace.execute(taskList, callBack);
+}
+
+ModelHandler.prototype.findModel = function(modelId, cb) {
+  var workspace = this;
+
+  var refresh = function(next) {
+    workspace.refreshModel(modelId, function(err, modelDef){
       if(err) return next(err);
       next(null, modelDef);
     });
@@ -32,23 +62,10 @@ ModelHandler.prototype.readModel = function(modelId, cb) {
   var callBack = function(err, results) {
     if(err) return cb(err);
     var modelDef = results[0];
-    var modelData = clone(modelDef);
-    delete modelData['properties'];
-    delete modelData['methods'];
-    delete modelData['relations'];
-    delete modelData['validations'];
-    delete modelData['acls'];  
-    if(!workspace.isModelExists(modelId)) {
-      var model = new Model(workspace, modelId, modelData);
-      workspace.addConfigEntry(workspace, modelId, model, modelDef);
-      workspace.addModelAttributes(model, modelId, modelDef);
-    } else {
-      //workspace.updateModel(modelId, modelData, cb);
-    }
     cb(null, modelDef);
   }
 
-  var taskList = [readModel];
+  var taskList = [refresh];
   workspace.execute(taskList, callBack);
 }
 
@@ -56,23 +73,16 @@ ModelHandler.prototype.updateModel = function(modelId, modelData, cb) {
   var workspace = this;
 
   var refresh = function(next) {
-    workspace.readModel(modelId, function(err, modelDef){
+    workspace.refreshModel(modelId, function(err, modelDef){
       if(err) return next(err);
       next(null, modelDef);
     });
   }
 
   var update = function(next) {
-    if(workspace.isModelExists(modelId)) {
-      var model = workspace.getModel(modelId);
-      model.update(modelData);
-      var modelDef = model.getDefinition();
-      workspace.changeModel(modelId, modelDef, function(err) { 
-        next(err);
-      });
-    } else {
-      next("Model does not exist", null);
-    }
+    workspace.changeModel(modelId, modelDef, function(err) { 
+      next(err);
+    });
   }
 
   var callBack = function(err, results) {
@@ -88,20 +98,48 @@ ModelHandler.prototype.updateModel = function(modelId, modelData, cb) {
 ModelHandler.prototype.createModel = function(modelId, modelData, cb) {
   var workspace = this;
 
+  var refresh = function(next) {
+    workspace.refreshModel(modelId, function(err, modelDef){
+      //if(err) return next(err);
+      next();
+    });
+  }
+
   var create = function(next) {
-    if(!workspace.isModelExists(modelId)) {
-      workspace.addModel(modelId, modelData, function(err) { 
-        next(err, modelData);
-      });
-    } else {
-      next("Model already exists", null);
-    }
+    workspace.addModel(modelId, modelData, function(err) { 
+      next(err);
+    });
+  }
+
+  var addModelConfig = function(next) {
+    workspace.addModelConfig(modelId, {datasource: 'db', public: true}, function(err) { 
+      next(err);
+    });
   }
   
   var callBack = function(err, results) {
     if(err) return cb(err);
     var modelDef = results[0];
     cb(null, modelDef);
+  }
+
+  var taskList = [refresh, create, addModelConfig];
+  workspace.execute(taskList, callBack);
+}
+
+ModelHandler.prototype.createFacet = function(facetName, facetData, cb) {
+  var workspace = this;
+
+  var create = function(next) {
+    workspace.addFacet(facetName, facetData, function(err) { 
+      next(err, facetData);
+    });
+  }
+  
+  var callBack = function(err, results) {
+    if(err) return cb(err);
+    var config = results[0];
+    cb(null, config);
   }
 
   var taskList = [create];

@@ -12,7 +12,7 @@ var Middleware = app.models.Middleware;
 var ModelConfig = app.models.ModelConfig;
 var ModelProperty = app.models.ModelProperty;
 var ModelMethod = app.models.ModelMethod;
-var loader = function(){
+var loader = function() {
   return require('../workspaceManager.js');
 }
 
@@ -22,11 +22,11 @@ function readOperations(){
   this._id = "read";
 }
 
-readOperations.prototype.readModelConfig = function(modelConfig, cb) {
+readOperations.prototype.readModelConfig = function(cb) {
   var modelConfigFilePath = path.join(loader().getDirectory(), 'server/model-config.json');
   fs.readJson(modelConfigFilePath, function(err, data) {
     if(err) return cb(err);
-    cb(null, Object.keys(data));
+    cb(null, data);
   }); 
 }
 

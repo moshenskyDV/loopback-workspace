@@ -1,9 +1,3 @@
-var clone = require('lodash').clone;
-var Model = require('../model/datamodel.js').Model;
-var ModelMethod = require('../model/datamodel.js').ModelMethod;
-var ModelProperty = require('../model/datamodel.js').ModelProperty;
-var ModelRelation = require('../model/datamodel.js').ModelRelation;
-
 module.exports = MethodHandler;
 
 function MethodHandler() {
@@ -15,7 +9,7 @@ MethodHandler.prototype.isMethodExists = function(id) {
   
 }
 
-MethodHandler.prototype.readModelMethod = function(id, cb) {
+MethodHandler.prototype.findModelMethod = function(id, cb) {
   var workspace = this;
   var parts = id.split('.');
   var facet = parts[0];
@@ -23,8 +17,8 @@ MethodHandler.prototype.readModelMethod = function(id, cb) {
   var methodName = parts[2];
   var modelId = parts[0] + '.' + parts[1];
 
-  var readModel = function(next) {
-    workspace.readModel(modelId, function(err, modelDef){
+  var refresh = function(next) {
+    workspace.refreshModel(modelId, function(err, modelDef){
       if(err) return next(err);
       next(null, modelDef);
     });
@@ -38,7 +32,7 @@ MethodHandler.prototype.readModelMethod = function(id, cb) {
     cb(null, method);
   }
 
-  var taskList = [readModel];
+  var taskList = [refresh];
   workspace.execute(taskList, callBack);
 }
 
@@ -51,12 +45,13 @@ MethodHandler.prototype.createModelMethod = function(id, methodDef, cb) {
   var modelId = parts[0] + '.' + parts[1];
   
   var refresh = function(next) {
-    workspace.readModel(modelId, function(err, data) {
+    workspace.refreshModel(modelId, function(err, data) {
       next();
     });
   }
   var updateModel = function(next) {
-    workspace.addMethod(workspace, modelId, methodName, methodDef, next);
+    var model = workspace.getModel(modelId);
+    model.addMethod(workspace, modelId, methodName, methodDef, next);
   }
 
   var callBack = function(err, data) {

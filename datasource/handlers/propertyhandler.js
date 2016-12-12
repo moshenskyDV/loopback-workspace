@@ -1,9 +1,3 @@
-var clone = require('lodash').clone;
-var Model = require('../model/datamodel.js').Model;
-var ModelMethod = require('../model/datamodel.js').ModelMethod;
-var ModelProperty = require('../model/datamodel.js').ModelProperty;
-var ModelRelation = require('../model/datamodel.js').ModelRelation;
-
 module.exports = PropertyHandler;
 
 function PropertyHandler() {
@@ -15,7 +9,7 @@ PropertyHandler.prototype.isPropertyExists = function(id) {
   
 }
 
-PropertyHandler.prototype.readModelProperty = function(id, cb) {
+PropertyHandler.prototype.findModelProperty = function(id, cb) {
   var workspace = this;
   var parts = id.split('.');
   var facet = parts[0];
@@ -23,8 +17,8 @@ PropertyHandler.prototype.readModelProperty = function(id, cb) {
   var propertyName = parts[2];
   var modelId = parts[0] + '.' + parts[1];
 
-  var readModel = function(next) {
-    workspace.readModel(modelId, function(err, modelDef){
+  var refreshModel = function(next) {
+    workspace.refreshModel(modelId, function(err, modelDef){
       if(err) return next(err);
       next(null, modelDef);
     });
@@ -38,7 +32,7 @@ PropertyHandler.prototype.readModelProperty = function(id, cb) {
     cb(null, property);
   }
 
-  var taskList = [readModel];
+  var taskList = [refreshModel];
   workspace.execute(taskList, callBack);
 }
 
@@ -51,12 +45,13 @@ PropertyHandler.prototype.createModelProperty = function(id, propertyDef, cb) {
   var modelId = parts[0] + '.' + parts[1];
 
   var refresh = function(next) {
-    workspace.readModel(modelId, function(err, data) {
+    workspace.refreshModel(modelId, function(err, data) {
       next();
     });
   }
   var updateProperty = function(next) {
-    workspace.addProperty(workspace, modelId, propertyName, propertyDef, next);
+    var model = workspace.getModel(modelId);
+    model.addProperty(workspace, modelId, propertyName, propertyDef, next);
   }
 
   var callBack = function(err, data) {

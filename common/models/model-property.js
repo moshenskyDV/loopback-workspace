@@ -57,7 +57,7 @@ module.exports = function(ModelProperty) {
 
     ModelProperty.find = function(filter, options, cb) {
       var id = filter.where.id;
-      connector.getModelProperty(id, cb);
+      connector.findModelProperty(id, cb);
     };
   });
 

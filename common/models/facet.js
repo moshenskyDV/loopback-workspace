@@ -3,11 +3,9 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 'use strict';
-var fs = require('fs-extra');
-var path = require('path');
 var clone = require('lodash').clone;
 
-module.exports = function(ModelConfig) {
+module.exports = function(Facet) {
   /**
    * Defines a model configuration which attaches a model to a facet and a
    * dataSource. It also can extend a model definition with additional configuration.
@@ -16,16 +14,18 @@ module.exports = function(ModelConfig) {
    * @inherits Definition
    */
 
-  ModelConfig.on('dataSourceAttached', function(eventData) {
-    var connector = ModelConfig.getConnector();
+  Facet.on('dataSourceAttached', function(eventData) {
+    var connector = Facet.getConnector();
     
-    ModelConfig.find = function(filter, options, cb) {
-      var id = filter.where.id;
-      connector.findModelConfig(id, function(err, modelConfig){
+    Facet.create = function(data, options, cb) {
+      if(typeof options === 'function') {
+        cb = options;
+        options = null;
+      }
+      var id = data.name;
+      connector.createFacet(id, data, function(err, data) {
         if(err) return cb(err);
-        var data = clone(modelConfig);
-        data['id'] = id;
-        cb(null, [data]); 
+        cb(null, data);
       });
     };
   });

@@ -1,0 +1,16 @@
+{
+  "readonly": true,
+  "name": "person",
+  "plural": "people",
+  "strict": true,
+  "public": true,
+  "idInjection": true,
+  "scopes": {},
+  "indexes": {},
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {},
+  "methods": {},
+  "relations": {}
+}

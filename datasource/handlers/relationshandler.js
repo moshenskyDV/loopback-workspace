@@ -1,7 +1,10 @@
+module.exports = RelationsHandler;
 
+function RelationsHandler() {
 
+} 
 
-RelationsHandler.prototype.readModelRelation = function(id, cb) {
+RelationsHandler.prototype.findModelRelation = function(id, cb) {
   var workspace = this;
   var operations = new read.operations();
   var parts = id.split('.');

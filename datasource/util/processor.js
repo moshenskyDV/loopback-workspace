@@ -33,12 +33,13 @@ Processor.prototype.addTask = function(task) {
 Processor.prototype.execute = function() {
   var queue = async.queue(executor,1);
   function executor(task, next) {
-      async.series(task.list, function(err, data) {
-        if (err) {
-          task.callBack(err);
-        }
+    async.series(task.list, function(err, data) {
+      if (err) {
+        task.callBack(err);
+      } else {
         task.callBack(null, data);
-      });
+      } 
+    });
   }
   var executionList = this.taskList;
   this.taskList = [];

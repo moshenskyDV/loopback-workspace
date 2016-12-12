@@ -26,6 +26,9 @@
   },
   "ModelRelation": {
     "dataSource": "db"
+  },
+  "Facet": {
+    "dataSource": "db"
   }
 }
 
