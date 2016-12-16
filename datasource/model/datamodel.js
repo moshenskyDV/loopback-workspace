@@ -147,9 +147,15 @@ Facet.prototype.addModelConfig = function(modelName, model, configData) {
   return modelConfig;
 }
 
+Facet.prototype.updateMetadata = function(configData) {
+  this._content = configData;
+}
+
 Facet.prototype.getModelConfigurations = function() {
+  var modelsMetadata = this._content;
   var links = this._outboundLinks;
   var modelConfigs = {};
+  modelConfigs._meta = modelsMetadata;
   for (var key in links) {
     var config = links[key];
     modelConfigs[key] = config._content;

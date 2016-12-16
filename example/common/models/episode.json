@@ -1,0 +1,17 @@
+{
+  "readonly": true,
+  "name": "episode",
+  "description": "string",
+  "plural": "episodes",
+  "strict": true,
+  "public": true,
+  "idInjection": true,
+  "scopes": {},
+  "indexes": {},
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {},
+  "methods": {},
+  "relations": {}
+}

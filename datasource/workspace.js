@@ -26,7 +26,21 @@ function Workspace(rootFolder) {
   this.directory = rootFolder;
   this.middlewarePhases = [];
   this.facet = {};
-  var serverFacet = new Facet(this, 'server', {});
+  var defaultModelsMetadata = {
+    "sources": [
+      "loopback/common/models",
+      "loopback/server/models",
+      "../common/models",
+      "./models"
+    ],
+    "mixins": [
+      "loopback/common/mixins",
+      "loopback/server/mixins",
+      "../common/mixins",
+      "./mixins"
+    ]
+  };
+  var serverFacet = new Facet(this, 'server', defaultModelsMetadata);
   var commonFacet = new Facet(this, 'common', {});
   this.facet['server'] = serverFacet;
   this.facet['common'] = commonFacet;

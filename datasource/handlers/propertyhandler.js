@@ -49,6 +49,7 @@ PropertyHandler.prototype.createModelProperty = function(id, propertyDef, cb) {
       next();
     });
   }
+  
   var updateProperty = function(next) {
     var model = workspace.getModel(modelId);
     workspace.addProperty(workspace, modelId, propertyName, propertyDef, function(err, data) {

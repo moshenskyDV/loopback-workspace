@@ -1,12 +1,20 @@
 {
-  "ModelDefaultDir": "models",
   "files": {
-    "Models": [
+     "Models": [
        "models/*.json"
      ],
-     "ModelConfig":[
+     "ModelConfig": [
        "model-config.json"
+     ],
+     "Datasources": [
+      "datasources.json",
+      "datasources.*.json"
+     ],
+     "Middleware": [
+      "middleware.json",
+      "middleware.*.json"
      ]
    },
-   "ModelConfigFile": "model-config.json"
+   "ModelConfigFile": "model-config.json",
+   "ModelDefaultDir": "models"
 }

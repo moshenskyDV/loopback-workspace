@@ -42,6 +42,15 @@ readOperations.prototype.readModel = function(id, cb) {
   });
 }
 
+readOperations.prototype.readModelFile = function(filePath, cb) {
+  var folder = config.ModelDefaultDir;
+  var file = path.resolve(loader().getDirectory(), filePath);
+  fs.readJson(file, function(err, data) {
+    if(err) return cb(err);
+    cb(null, data);
+  });
+} 
+
 readOperations.prototype.readMiddleware = function(id, cb) {
   var file = path.resolve(loader().getDirectory(), 'server/middleware.json');
   fs.readJson(file, function(err, data) {

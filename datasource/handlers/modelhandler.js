@@ -51,21 +51,29 @@ ModelHandler.prototype.deleteModel = function(modelId, cb) {
 
 ModelHandler.prototype.findModel = function(modelId, cb) {
   var workspace = this;
+  var modelDef = null;
+
+  var load = function(next) {
+    workspace.loadWorkspace(function(err, status) {
+      if(err && err.length && err.length > 0) return next(err);
+      next();
+    });
+  }
 
   var refresh = function(next) {
-    workspace.refreshModel(modelId, function(err, modelDef){
+    workspace.refreshModel(modelId, function(err, data){
       if(err) return next(err);
-      next(null, modelDef);
+      modelDef = data;
+      next();
     });
   }
 
   var callBack = function(err, results) {
     if(err) return cb(err);
-    var modelDef = results[0];
     cb(null, modelDef);
   }
 
-  var taskList = [refresh];
+  var taskList = [load, refresh];
   workspace.execute(taskList, callBack);
 }
 

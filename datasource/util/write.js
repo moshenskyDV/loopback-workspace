@@ -23,18 +23,25 @@ function writeOperations(){
 }
 
 writeOperations.prototype.writeFacet = function(facetName, facetData, cb) {
-  var facetFolder = path.join(loader().getDirectory(), 'server');
+  var facetFolder = path.join(loader().getDirectory(), facetName);
   fs.mkdir(facetFolder, function(err) {
     if (err) {
       if (!err.code == 'EEXIST') {// ignore the error if the folder already exists
         cb(err);
+      } else {
+        cb('facet exists already')
       }   
+    } else  if(facetName !== 'common') {
+      var serverConfigPath = path.join(loader().getDirectory(), facetName, 'config.json');
+      fs.writeJson(serverConfigPath, {}, function(err) {
+        if(err) return cb(err);
+        var modelConfigPath = path.join(loader().getDirectory(), facetName, 'model-config.json');
+        fs.writeJson(modelConfigPath, facetData, function(err) {
+          if(err) return cb(err);
+          cb(null);
+        }); 
+      }); 
     }
-    var serverConfigPath = path.join(loader().getDirectory(), 'server/config.json');
-    fs.writeJson(serverConfigPath, facetData, function(err) {
-      if(err) return cb(err);
-      cb(null);
-    }); 
   });
 }
 

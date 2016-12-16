@@ -1,0 +1,17 @@
+{
+  "readonly": true,
+  "name": "transaction",
+  "description": "string",
+  "plural": "transactions",
+  "strict": true,
+  "public": true,
+  "idInjection": true,
+  "scopes": {},
+  "indexes": {},
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {},
+  "methods": {},
+  "relations": {}
+}

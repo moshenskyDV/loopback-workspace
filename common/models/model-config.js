@@ -21,7 +21,7 @@ module.exports = function(ModelConfig) {
     
     ModelConfig.find = function(filter, options, cb) {
       var id = filter.where.id;
-      connector.findModelConfig(id, function(err, modelConfig){
+      connector.findModelConfig(id, function(err, modelConfig) {
         if(err) return cb(err);
         var data = clone(modelConfig);
         data['id'] = id;

@@ -1,9 +1,26 @@
 {
+  "_meta": {},
   "Order": {
     "datasource": "db",
     "public": true
   },
   "Review": {
+    "datasource": "db",
+    "public": true
+  },
+  "customer": {
+    "datasource": "db",
+    "public": true
+  },
+  "episode": {
+    "datasource": "db",
+    "public": true
+  },
+  "channel": {
+    "datasource": "db",
+    "public": true
+  },
+  "billing": {
     "datasource": "db",
     "public": true
   }

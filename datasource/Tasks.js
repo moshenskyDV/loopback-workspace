@@ -1,4 +1,5 @@
 var clone = require('lodash').clone;
+var dataModel = require('./model/datamodel.js');
 var Model = require('./model/datamodel.js').Model;
 var ModelMethod = require('./model/datamodel.js').ModelMethod;
 var ModelProperty = require('./model/datamodel.js').ModelProperty;
@@ -6,11 +7,61 @@ var ModelRelation = require('./model/datamodel.js').ModelRelation;
 var Facet = require('./model/datamodel.js').Facet;
 var read = require('./util/read.js');
 var write = require('./util/write.js');
+var load = require('./util/load.js');
+var async = require('async');
 
 module.exports.Tasks = Tasks;
 
 function Tasks() {
 
+}
+
+Tasks.prototype.loadWorkspace = function(cb) {
+  var workspace = this;
+  load.listOfFiles(workspace.directory, function(err, files) {
+    if(err) return cb(err);
+    var errorList = [];
+    var steps = [];
+    Object.keys(files).forEach(function(key) {
+      var list = files[key];
+      if(key==='Models') {
+        list.forEach(function (filePath) {
+          steps.push(function(next) {
+            workspace.refreshModelReadFile(filePath, function(err, data) {
+              if (err) errorList.push(err);
+              next();
+            });
+          });
+        });
+      }
+    });
+    async.parallel(steps, function(err, data) {
+      if(err) errorList.push(err);
+      cb(errorList);
+    });
+  });
+}
+
+Tasks.prototype.refreshModelReadFile = function(filePath, cb) {
+  var workspace = this;
+  var operations = new read.operations();
+  operations.readModelFile(filePath, function(err, modelDef) {
+    if(err) return cb(err);
+    var modelData = clone(modelDef);
+    delete modelData['properties'];
+    delete modelData['methods'];
+    delete modelData['relations'];
+    delete modelData['validations'];
+    delete modelData['acls'];  
+    var modelId = 'common.'+modelData.name;
+    if(!workspace.isModelExists(modelId)) {
+      var model = new Model(workspace, modelId, modelData);
+      model.addModelAttributes(workspace, modelId, modelDef);
+    } else {
+      //workspace.updateModel(modelId, modelData, cb);
+    }
+    cb(null, modelDef);
+  });
 }
 
 Tasks.prototype.refreshModel = function(modelId, cb) {
@@ -81,6 +132,9 @@ Tasks.prototype.refreshModelConfig = function(cb) {
   operations.readModelConfig(function(err, modelConfigurations) { 
     if(err) return cb(err);
     var facet = workspace.getFacet(facetName);
+    var modelsMetadata = modelConfigurations._meta;
+    //facet.updateMetadata(modelsMetadata);
+    delete modelConfigurations._meta;
     Object.keys(modelConfigurations).forEach(function(key) {
       var config = modelConfigurations[key];
       var modelId = facetName + "." + key;

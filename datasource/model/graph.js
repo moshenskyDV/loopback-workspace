@@ -57,6 +57,6 @@ Node.prototype.get = function(fieldName) {
 
 Link.prototype.remove = function() {
   var name = this._name;
-  delete _from._outboundLinks[this._linkType][name];
+  delete _from._outboundLinks[name];
   delete _to._inboundLinks[name];
 }
